@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Équipements sportifs du SUAPS de CY Cergy Paris Université 2026-2027</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    *{box-sizing:border-box}html,body{height:100%;margin:0;font-family:Arial,sans-serif;color:#18324a;background:#f5f7fa}
+    main{height:100%;position:relative;display:block}
+    aside{position:absolute;left:10px;top:10px;bottom:10px;width:320px;padding:22px 18px;overflow:auto;background:rgba(255,255,255,0.85);backdrop-filter:blur(4px);border-radius:12px;box-shadow:2px 0 14px #18324a22;z-index:500}
+    h1{font-size:21px;line-height:1.2;margin:0 0 6px;color:#18324a}.intro{font-size:13px;color:#607286;margin:0 0 16px}
+    ol{list-style:none;padding:0;margin:0;display:grid;gap:7px}button.place{width:100%;display:grid;grid-template-columns:32px 1fr;gap:8px;border:0;border-radius:10px;padding:9px;text-align:left;background:#f2f6f8;color:#18324a;cursor:pointer}
+    button.place:hover,button.place.active{background:#e3f4ef;outline:2px solid #008b70}.num{grid-row:1/4;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#008b70;color:#fff;font-weight:700}.name{font-size:13px;font-weight:700}.address,.bus{font-size:11px;color:#607286;line-height:1.3}.bus{color:#235b86;font-weight:700}
+    #map{position:absolute;inset:0;height:100%;min-height:560px}.leaflet-popup-content{line-height:1.35}.leaflet-popup-content strong{font-size:14px}.leaflet-popup-content a{display:inline-block;margin-top:7px;color:#007a63;font-weight:700;text-decoration:none}
+    .numbered-marker{display:grid;place-items:center;width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#008b70;color:white;border:3px solid white;box-shadow:0 2px 6px #0006}.numbered-marker.university{background:#1d5fa7}.numbered-marker span{transform:rotate(45deg);font-weight:700;font-size:13px}
+    button.place.university .num{background:#1d5fa7}.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0 0 14px;font-size:11px;color:#607286}.legend span{display:flex;align-items:center;gap:5px}.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}.sport-dot{background:#008b70}.university-dot{background:#1d5fa7}
+    @media(max-width:700px){main{grid-template-columns:1fr;grid-template-rows:auto 66vh}aside{padding:14px;max-height:34vh}ol{grid-template-columns:1fr 1fr}h1{font-size:18px}.intro{margin-bottom:9px}#map{min-height:0}}
+    @media(max-width:430px){ol{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main>
+  <aside>
+    <h1>Équipements sportifs du SUAPS de CY Cergy Paris Université 2026-2027</h1>
+    <p class="intro">Cliquez sur un équipement ou directement sur son repère.</p>
+    <div class="legend"><span><i class="sport-dot"></i>Équipement sportif</span><span><i class="university-dot"></i>Site universitaire CY</span></div>
+    <ol id="places"></ol>
+  </aside>
+  <div id="map" aria-label="Carte interactive des équipements sportifs"></div>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const places=[
+ {n:1,name:'CY Cergy Paris Université — SUAPS (Service du sport universitaire) — Site des Chênes, entrée 3',address:'33 boulevard du Port, 95011 Cergy',lat:49.0389975,lng:2.0756928,noRoutes:true,hideAccessInfo:true,googleUrl:'https://www.google.com/maps/place/Centre+sportif+universitaire+des+Ch%C3%AAnes+-+CY+Cergy+Paris+Universit%C3%A9/@49.0389975,2.0756928,17z/data=!4m6!3m5!1s0x47e6f55556e1e7a1:0xb3bd218f384975df!8m2!3d49.0389975!4d2.0756928!16s%2Fg%2F11tdqy34g0'},
+ {n:2,name:'Gymnase des Chênes',address:'Rue des Chênes-Pourpres, 95000 Cergy',lat:49.0398,lng:2.0737,bus:'À pied ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚲',footOnly:true,hideWalkModeInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3'},
+ {n:3,name:'Piscine du Parvis',address:'Parvis de la Préfecture, 95000 Cergy',lat:49.0354,lng:2.0784,bus:'À pied, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚗 🚲',noTransit:true,combinedFootCar:true,hideModesInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3'},
+ {n:4,name:'Complexe des Maradas',address:'6 passage du Lycée, 95300 Pontoise',lat:49.0352688,lng:2.0864838,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',combinedAll:true,hideModesInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3',googleUrl:'https://www.google.com/maps/place/Pôle+Sportif+des+Maradas+-+Joël+Motyl/@49.0352688,2.0864838,17z/data=!4m6!3m5!1s0x47e6f539ab1d80d1:0x48b27a349e7a325b!8m2!3d49.0352688!4d2.0864838!16s%2Fg%2F1tgp03jt'},
+ {n:5,name:'Gymnase de l’ESSEC — Sports & Recreation Center',address:'3 avenue Bernard-Hirsch, 95000 Cergy — accès par la grille de la chapelle, côté parc François-Mitterrand',lat:49.0333333,lng:2.0752778,bus:'À pied, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚗 🚲',noTransit:true,combinedFootCar:true,hideModesInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3',googleUrl:'https://www.google.com/maps/search/?api=1&query=49.0333333,2.0752778'},
+{n:6,name:'Hall Omnisports Philippe HEMET',address:'1 Rue Pierre de Coubertin, 95300 Pontoise',lat:49.04532,lng:2.08511,bus:'À pied, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚗 🚲',noTransit:true,combinedFootCar:true,hideModesInRouteLabel:true,walkingOrigin:'49.039683,2.075183',walkingOriginLabel:'CY — site des Chênes',walkingDestination:'1 Rue Pierre de Coubertin, 95300 Pontoise',routeWaypoints:'49.039683,2.075183',drivingOrigin:'49.039683,2.075183',drivingOriginLabel:'CY — site des Chênes',drivingDestination:'Hall Omnisports Philippe HEMET, 1 Rue Pierre de Coubertin, 95300 Pontoise',googleUrl:'https://www.google.com/maps/search/?api=1&query=49.04532,2.08511'},
+ {n:7,name:'Block’Out',address:'9 chaussée Jules-César, 95520 Osny',lat:49.0627,lng:2.0604,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',combinedAll:true,hideModesInRouteLabel:true,walkingOrigin:'49.039683,2.075183',walkingOriginLabel:'CY – site des Chênes',walkingDestination:'Block’Out, 9 chaussée Jules-César, 95520 Osny',drivingOrigin:'49.039683,2.075183',drivingDestination:'Block’Out Cergy-Pontoise, 9 chaussée Jules-César, 95520 Osny'},
+ {n:8,name:'Golf de Vauréal',address:'2 allée de l’Obstacle-d’Eau, 95490 Vauréal',lat:49.0380821,lng:2.0131195,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',combinedAll:true,hideModesInRouteLabel:true,googleUrl:'https://www.google.com/maps/place//data=!4m2!3m1!1s0x47e6f35b3ceeb64f:0x1cdbb8f23b6ce7fb?sa=X&ved=1t:8290&ictx=111'},
+ {n:9,name:'Tennis Club de Pontoise',address:'18 chemin de la Pelouse, 95300 Pontoise',lat:49.03786,lng:2.09509,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',combinedAll:true,hideModesInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3',walkingDestination:'Tennis Club de Pontoise, 18 chemin de la Pelouse, 95300 Pontoise',transitDestination:'Tennis Club de Pontoise, 18 chemin de la Pelouse, 95300 Pontoise',drivingOrigin:'49.0389975,2.0756928',drivingDestination:'Tennis Club de Pontoise, 18 chemin de la Pelouse, 95300 Pontoise',googleUrl:'https://www.google.com/maps/search/?api=1&query=49.03786,2.09509'},
+ {n:10,name:'Île de loisirs — « Kayak-Paddle » — Parking 3 — Centre multisports',address:'3 rue de la Féculerie, 95000 Cergy',lat:49.0291667,lng:2.0563889,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',customKayakRoutes:true,walkingOnlyToParking:true,walkingOrigin:'49.039683,2.075183',walkingOriginLabel:'CY — site des Chênes',walkingDestination:'49.0284719,2.0560148',drivingOrigin:'49.039683,2.075183',drivingWaypoints:'49.0217870018582,2.052319049835205',carRoute:true,parking:'Parking P3, 5 chemin des Éguerets, 95000 Cergy',parkingCoords:'49.0284719,2.0560148',parkingPlaceId:'ChIJfdBojNH05kcRFrN0dcBc_j8',hideParkingWalk:true},
+ {n:11,name:'Île de loisirs — « Accrobranche » — Parking 1',address:'Rue des Étangs, 95000 Cergy',lat:49.026242,lng:2.050669,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',customAccroRoutes:true,walkingOrigin:'49.039683,2.075183',walkingOriginLabel:'CY — site des Chênes',walkingDestination:'49.026242,2.050669',googleUrl:'https://www.google.com/maps/place/Parc+Xtrem+Aventures+Cergy/@49.026242,2.050669,17z',carRoute:true,parking:'Parking 1, Île de loisirs de Cergy-Pontoise'},
+ {n:12,name:'Île de loisirs — « Rafting » — Parking 1',address:'Stade d’eau vive, Île de loisirs, 95000 Cergy',lat:49.029111,lng:2.051169,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',customRaftRoutes:true,walkingOrigin:'49.039683,2.075183',walkingOriginLabel:'CY — site des Chênes',walkingDestination:'49.029111,2.051169',googleUrl:'https://www.google.com/maps/search/?api=1&query=49.029111,2.051169',carRoute:true,parking:'Parking 1, Île de loisirs de Cergy-Pontoise, Rue des Étangs, 95000 Cergy'},
+ {n:13,name:'Île de loisirs — « Téléski–Vague à surf » — Parking Voie des Sabliers',address:'Île de loisirs de Cergy-Pontoise, 95000 Cergy',lat:49.0321701,lng:2.0455258,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',customSurfRoutes:true,walkingOrigin:'49.039683,2.075183',walkingDestination:'49.0321701,2.0455258',hideMapLink:true},
+ {n:'CY',name:'CY Cergy Paris Université — Site des Chênes',address:'33 boulevard du Port, 95011 Cergy-Pontoise',lat:49.039683,lng:2.075183,type:'university',bus:'Point de départ'},
+ {n:'CY',name:'CY Cergy Paris Université — Site de Saint-Martin',address:'2 avenue Adolphe-Chauvin, 95300 Pontoise',lat:49.0428,lng:2.08424,type:'university',bus:'Arrêt Plateau Saint-Martin — lignes 1230, 1236'}
+];
+const map=L.map('map',{zoomControl:true}).setView([49.041,2.075],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+const list=document.getElementById('places'),markers=[];
+function mapsLink(p){return p.googleUrl||'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.name+', '+p.address)}
+function transitLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent('CY Cergy Paris Université Site des Chênes, 33 boulevard du Port, Cergy')+'&destination='+encodeURIComponent(p.transitDestination||p.name+', '+p.address)+(p.placeId?'&destination_place_id='+encodeURIComponent(p.placeId):'')+'&travelmode=transit'}
+function drivingLink(p){const placeId=p.parkingPlaceId||p.placeId;return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.drivingOrigin||'49.039683,2.075183')+'&destination='+encodeURIComponent(p.drivingDestination||p.parkingCoords||p.parking||p.lat+','+p.lng)+(placeId?'&destination_place_id='+encodeURIComponent(placeId):'')+(p.drivingWaypoints?'&waypoints='+encodeURIComponent(p.drivingWaypoints):'')+'&travelmode=driving'}
+function walkingLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.walkingOrigin||'49.039683,2.075183')+'&destination='+encodeURIComponent(p.walkingDestination||p.lat+','+p.lng)+(p.placeId?'&destination_place_id='+encodeURIComponent(p.placeId):'')+'&travelmode=walking'}
+function mixedFootCarLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.walkingOrigin||'49.039683,2.075183')+'&destination='+encodeURIComponent(p.walkingDestination||p.lat+','+p.lng)+(p.placeId?'&destination_place_id='+encodeURIComponent(p.placeId):'')+(p.routeWaypoints?'&waypoints='+encodeURIComponent(p.routeWaypoints):'')}
+function walkingFromParkingLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.parkingCoords||p.parking)+(p.parkingPlaceId?'&origin_place_id='+encodeURIComponent(p.parkingPlaceId):'')+'&destination='+encodeURIComponent(p.lat+','+p.lng)+'&travelmode=walking'}
+function walkingFromTransitLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.transitDestination)+'&destination='+encodeURIComponent(p.lat+','+p.lng)+'&travelmode=walking'}
+places.forEach((p,i)=>{
+ const icon=L.divIcon({className:'',html:'<div class="numbered-marker '+(p.type==='university'?'university':'')+'"><span>'+p.n+'</span></div>',iconSize:[32,32],iconAnchor:[16,32],popupAnchor:[0,-30]});
+ const carLabel=p.parking?'🚗 Itinéraire en voiture de CY jusqu’au '+p.parking.split(',')[0]:'🚗 Itinéraire en voiture depuis '+(p.drivingOriginLabel||'CY – site des Chênes');
+ const standardRoutes='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">🚶 Itinéraire à pied depuis '+(p.walkingOriginLabel||'CY – site des Chênes')+'</a>'+(p.noTransit?'':'<br><a target="_blank" rel="noopener" href="'+transitLink(p)+'">🚌 Itinéraire en bus depuis le site des Chênes</a>')+'<br><a target="_blank" rel="noopener" href="'+drivingLink(p)+'">'+carLabel+'</a>';
+ const combinedFootCarRoute='<br><a target="_blank" rel="noopener" href="'+mixedFootCarLink(p)+'">🚶 🚗 Itinéraire '+(p.hideModesInRouteLabel?'':'à pied ou en voiture ')+'depuis '+(p.walkingOriginLabel||'CY – site des Chênes')+'</a>';
+ const combinedAllRoute='<br><a target="_blank" rel="noopener" href="'+mixedFootCarLink(p)+'">🚶 🚌 🚗 Itinéraire '+(p.hideModesInRouteLabel?'':'à pied, en bus ou en voiture ')+'depuis '+(p.walkingOriginLabel||'CY – site des Chênes')+(p.routeNote?' — '+p.routeNote:'')+'</a>';
+ const footOnlyLabel=p.walkingOnlyToParking?'🚶 Itinéraire depuis '+(p.walkingOriginLabel||'CY – site des Chênes')+' jusqu’au Parking 3':'🚶 Itinéraire '+(p.hideWalkModeInRouteLabel?'':'à pied ')+'depuis '+(p.walkingOriginLabel||'CY – site des Chênes');
+ const footOnlyRoute='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">'+footOnlyLabel+'</a>';
+ const kayakRoutes=footOnlyRoute+'<br><a target="_blank" rel="noopener" href="'+drivingLink(p)+'">🚗 Itinéraire en voiture depuis CY — site des Chênes jusqu’au Parking 3, en passant par l’entrée de l’Île de loisirs</a>';
+ const accroRoutes='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">🚶 Itinéraire depuis CY — site des Chênes jusqu’à l’Accrobranche</a>';
+ const raftRoutes='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">🚶 Itinéraire depuis CY — site des Chênes jusqu’au Rafting</a>';
+ const surfRoutes='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">🚶 Itinéraire depuis CY — site des Chênes jusqu’à la Vague à surf</a>';
+ const islandTransitRoutes=p.transitEndsAtParking?'<br><a target="_blank" rel="noopener" href="'+transitLink(p)+'">🚌 🚶 Itinéraire en bus, puis à pied, depuis le site des Chênes jusqu’au Parking 3</a>':'<br><a target="_blank" rel="noopener" href="'+transitLink(p)+'">🚌 Itinéraire en bus depuis le site des Chênes</a>';
+ const parkingWalkRoute=p.hideParkingWalk?'':'<br><a target="_blank" rel="noopener" href="'+walkingFromParkingLink(p)+'">🚶 Accès uniquement à pied du parking jusqu’à l’activité — aucun accès voiture</a>';
+ const islandRoutes=islandTransitRoutes+'<br><a target="_blank" rel="noopener" href="'+drivingLink(p)+'">'+carLabel+'</a>'+parkingWalkRoute;
+ const routeLinks=(p.type==='university'||p.noRoutes)?'':(p.customKayakRoutes?kayakRoutes:(p.customSurfRoutes?surfRoutes:(p.customRaftRoutes?raftRoutes:(p.customAccroRoutes?accroRoutes:(p.walkingOnlyToParking?footOnlyRoute:(p.parking?islandRoutes:(p.combinedAll?combinedAllRoute:(p.combinedFootCar?combinedFootCarRoute:(p.footOnly?footOnlyRoute:standardRoutes)))))))));
+ const accessInfo=p.hideAccessInfo?'':'<br><b>'+(p.accessLabel||'Bus')+' :</b> '+p.bus;
+ const mapLink=p.hideMapLink?'':'<br><a target="_blank" rel="noopener" href="'+mapsLink(p)+'">Voir le lieu</a>';
+ const marker=L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup('<strong>'+p.n+'. '+p.name+'</strong><br>'+p.address+accessInfo+routeLinks+mapLink);
+ markers.push(marker);
+ const li=document.createElement('li'),button=document.createElement('button');button.className='place '+(p.type==='university'?'university':'');button.type='button';button.innerHTML='<span class="num">'+p.n+'</span><span class="name">'+p.name+'</span><span class="address">'+p.address+'</span>'+(p.hideAccessInfo?'':'<span class="bus">'+(p.accessIcon||'🚌')+' '+p.bus+'</span>');
+ button.addEventListener('click',()=>{document.querySelectorAll('.place').forEach(x=>x.classList.remove('active'));button.classList.add('active');map.flyTo([p.lat,p.lng],16,{duration:.7});marker.openPopup()});li.appendChild(button);list.appendChild(li);
+});
+map.fitBounds(L.latLngBounds(places.map(p=>[p.lat,p.lng])),{padding:[40,40]});
+</script>
+</body>
+</html>
