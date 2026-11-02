@@ -3,48 +3,188 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Équipements sportifs du SUAPS de CY Cergy Paris Université 2026-2027</title>
+  <title>Cours et équipements sportifs du SUAPS de CY Cergy Paris Université 2026-2027</title>
+  <meta name="description" content="Planning et carte des cours du SUAPS de CY Cergy Paris Université : jours, horaires, lieux et itinéraires depuis le site des Chênes.">
+  <meta name="theme-color" content="#0f2b2e">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23007a63'/%3E%3Ccircle cx='16' cy='14' r='6' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script type="text/javascript">
+  <script>
+    // Mesure d'audience Clarity : uniquement sur le site en ligne
+    if(location.hostname==='suaps-cyu.github.io'){
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "yco03jr501");
-</script>
+    }
+  </script>
   <style>
-    *{box-sizing:border-box}html,body{height:100%;margin:0;font-family:Arial,sans-serif;color:#18324a;background:#f5f7fa}
-    main{height:100%;position:relative;display:block}
-    aside{position:absolute;left:10px;top:10px;bottom:10px;width:320px;padding:22px 18px;overflow:auto;background:rgba(255,255,255,0.85);backdrop-filter:blur(4px);border-radius:12px;box-shadow:2px 0 14px #18324a22;z-index:500}
-    h1{font-size:21px;line-height:1.2;margin:0 0 6px;color:#18324a}.intro{font-size:13px;color:#607286;margin:0 0 16px}
-    ol{list-style:none;padding:0;margin:0;display:grid;gap:7px}button.place{width:100%;display:grid;grid-template-columns:32px 1fr;gap:8px;border:0;border-radius:10px;padding:9px;text-align:left;background:#f2f6f8;color:#18324a;cursor:pointer}
-    button.place:hover,button.place.active{background:#e3f4ef;outline:2px solid #008b70}.num{grid-row:1/4;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#008b70;color:#fff;font-weight:700}.name{font-size:13px;font-weight:700}.address,.bus{font-size:11px;color:#607286;line-height:1.3}.bus{color:#235b86;font-weight:700}
-    #map{position:absolute;inset:0;height:100%;min-height:560px}.leaflet-popup-content{line-height:1.35}.leaflet-popup-content strong{font-size:14px}.leaflet-popup-content a{display:inline-block;margin-top:7px;color:#007a63;font-weight:700;text-decoration:none}
-    .numbered-marker{display:grid;place-items:center;width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#008b70;color:white;border:3px solid white;box-shadow:0 2px 6px #0006}.numbered-marker.university{background:#1d5fa7}.numbered-marker span{transform:rotate(45deg);font-weight:700;font-size:13px}
-    button.place.university .num{background:#1d5fa7}.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0 0 14px;font-size:11px;color:#607286}.legend span{display:flex;align-items:center;gap:5px}.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}.sport-dot{background:#008b70}.university-dot{background:#1d5fa7}
-    @media(max-width:700px){main{grid-template-columns:1fr;grid-template-rows:auto 66vh}aside{padding:14px;max-height:34vh}ol{grid-template-columns:1fr 1fr}h1{font-size:18px}.intro{margin-bottom:9px}#map{min-height:0}}
-    @media(max-width:430px){ol{grid-template-columns:1fr}}
+    :root{
+      --ink:#0f2b2e;--ink-soft:#4d6266;--line:#dfe6e4;--paper:#fff;--wash:#f3f6f4;
+      --sport:#007a63;--sport-wash:#e2f2ed;--campus:#1d5fa7;--campus-wash:#e4edf7;--signal:#ffc42e;
+      --display:'Barlow Condensed','Arial Narrow',Arial,sans-serif;--body:Barlow,Arial,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{font:400 15px/1.4 var(--body);color:var(--ink);background:var(--wash)}
+    button,input{font:inherit;color:inherit}
+    button{cursor:pointer}
+    :focus-visible{outline:3px solid var(--signal);outline-offset:2px}
+    [hidden]{display:none!important}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+    .icon{width:1.2em;height:1.2em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+    .app{height:100vh;height:100dvh;display:grid;grid-template-columns:minmax(360px,420px) 1fr}
+    .panel{display:flex;flex-direction:column;min-height:0;background:var(--paper);box-shadow:2px 0 18px #0f2b2e26;z-index:800}
+    #map{min-height:0;background:#e6ebe8}
+
+    .masthead{padding:20px 22px 18px;background:var(--ink);color:#fff}
+    .masthead p{margin:0 0 6px;font-size:13px;font-weight:500;color:#b9d2cc}
+    h1{margin:0;font:700 38px/1 var(--display);letter-spacing:.2px}
+    .season{display:inline-block;margin-left:4px;padding:1px 7px 2px;border-radius:4px;background:var(--signal);color:var(--ink);font-size:.56em;vertical-align:.2em;white-space:nowrap}
+
+    .view{flex:1;display:flex;flex-direction:column;min-height:0}
+    .tools{padding:14px 22px 12px;border-bottom:1px solid var(--line)}
+    .search{display:flex;align-items:center;gap:8px;padding:0 12px;height:44px;border:1.5px solid #b8c6c2;border-radius:8px;background:var(--paper);color:var(--ink-soft)}
+    .search:focus-within{border-color:var(--sport);outline:2px solid var(--sport)}
+    .search input{flex:1;min-width:0;border:0;outline:0;background:none;color:var(--ink)}
+    .search input::placeholder{color:var(--ink-soft)}
+    .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+    .chip{flex:none;min-height:32px;padding:0 10px;border:1.5px solid var(--line);border-radius:16px;background:var(--paper);font-size:13px;font-weight:600;color:var(--ink-soft)}
+    .chip:hover{border-color:var(--sport);color:var(--ink)}
+    .chip[aria-pressed=true]{border-color:var(--sport);background:var(--sport);color:#fff}
+
+    .scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+    .group{margin:0;padding:14px 22px 6px;font:700 15px/1 var(--display);letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft)}
+    .places{list-style:none;margin:0;padding:0}
+    .place{width:100%;display:grid;grid-template-columns:40px 1fr auto;gap:0 12px;align-items:center;padding:10px 22px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left}
+    .place:hover{background:var(--wash)}
+    .num{display:grid;place-items:center;width:40px;height:40px;border-radius:8px;background:var(--sport-wash);color:var(--sport);font:700 23px/1 var(--display)}
+    .campus .num{background:var(--campus-wash);color:var(--campus);font-size:19px}
+    .place-text{min-width:0}
+    .place-title{display:block;font:700 20px/1.1 var(--display)}
+    .place-sub{display:block;margin-top:2px;font-size:13px;line-height:1.3;color:var(--ink-soft)}
+    .modes{display:flex;gap:5px;color:var(--ink-soft)}
+    .bonus{padding:2px 7px;border-radius:4px;background:var(--campus);color:#fff;font-size:12px;font-weight:600;white-space:nowrap}
+    .others{display:grid;gap:0}
+    .others .place{padding:9px 0;grid-template-columns:1fr auto}
+    .empty{margin:0;padding:28px 22px;color:var(--ink-soft)}
+    .empty button{padding:0;border:0;background:none;color:var(--sport);font-weight:600;text-decoration:underline}
+
+    .back{display:flex;align-items:center;gap:6px;width:100%;min-height:48px;padding:0 22px;border:0;border-bottom:1px solid var(--line);background:none;font-weight:600;color:var(--sport);text-align:left}
+    .back:hover{background:var(--wash)}
+    .detail-body{padding:20px 22px 26px}
+    .detail-head{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:start}
+    .detail-head .num{width:52px;height:52px;background:var(--sport);color:#fff;font-size:30px}
+    .detail-head.campus .num{background:var(--campus);color:#fff;font-size:24px}
+    .kicker{margin:0 0 2px;font-size:13px;font-weight:600;color:var(--ink-soft)}
+    h2{margin:0;font:700 30px/1.05 var(--display)}
+    h2:focus{outline:0}
+    .facts{margin:20px 0 0;padding:0}
+    .facts div{padding:11px 0;border-top:1px solid var(--line)}
+    .facts dt{font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-soft)}
+    .facts dd{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0 0}
+    h3{margin:18px 0 8px;font:700 15px/1 var(--display);letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft)}
+    .routes{display:grid;gap:8px}
+    .route{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;min-height:52px;padding:10px 12px;border:1.5px solid var(--sport);border-radius:8px;background:var(--paper);color:var(--ink);font-weight:600;line-height:1.25;text-decoration:none}
+    .route:hover{background:var(--sport-wash)}
+    .route .modes{color:var(--sport)}
+    .route .out{color:var(--sport)}
+    .route.plain{border-color:var(--line)}
+    .route.plain:hover{border-color:var(--sport)}
+
+    .legend{position:absolute;left:12px;bottom:22px;z-index:700;display:flex;gap:14px;padding:7px 11px;border-radius:7px;background:#fffffff0;box-shadow:0 1px 6px #0f2b2e33;font-size:13px;font-weight:500}
+    .legend span{display:flex;align-items:center;gap:6px}
+    .legend i{width:11px;height:11px;border-radius:50%;background:var(--sport)}
+    .legend .c{background:var(--campus)}
+
+    .leaflet-tile-pane{filter:saturate(.45) contrast(.96) brightness(1.03)}
+    .leaflet-container{font-family:var(--body)}
+    .leaflet-bar a{width:38px!important;height:38px!important;line-height:38px!important;color:var(--ink)}
+    .pin{display:grid;place-items:center;width:34px;height:34px;border:2.5px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--sport);box-shadow:0 2px 6px #0f2b2e66;transition:transform .15s}
+    .pin span{transform:rotate(45deg);font:700 17px/1 var(--display);color:#fff}
+    .pin.campus{background:var(--campus)}
+    .pin.campus span{font-size:14px}
+    .pin.on{transform:rotate(-45deg) scale(1.28);background:var(--ink);border-color:var(--signal);box-shadow:0 3px 10px #0f2b2e88}
+    .pin-tip{padding:3px 8px;border:0;border-radius:5px;background:var(--ink);box-shadow:none;color:#fff;font-weight:600}
+    .pin-tip::before{display:none}
+
+    @media(max-width:760px){
+      .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,38fr) minmax(0,62fr)}
+      .panel{display:contents}
+      .masthead{order:1;padding:10px 16px 11px}
+      .masthead p{margin-bottom:2px;font-size:12px}
+      h1{font-size:26px}
+      #map{order:2}
+      .view{order:3;background:var(--paper);box-shadow:0 -3px 14px #0f2b2e26;z-index:800}
+      .tools{padding:10px 16px}
+      .search{height:40px}
+      .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:6px -16px 0;padding:0 16px}
+      .group{padding:12px 16px 6px}
+      .place{padding:9px 16px}
+      .back{padding:0 16px}
+      .detail-body{padding:16px 16px 22px}
+      h2{font-size:27px}
+      .legend{top:8px;left:8px;bottom:auto;gap:10px;padding:5px 8px;font-size:12px}
+    }
+    @media(prefers-reduced-motion:reduce){.pin{transition:none}}
   </style>
 </head>
 <body>
-<main>
-  <aside>
-    <h1>Équipements sportifs du SUAPS de CY Cergy Paris Université 2026-2027</h1>
-    <p class="intro">Cliquez sur un équipement ou directement sur son repère.</p>
-    <div class="legend"><span><i class="sport-dot"></i>Équipement sportif</span><span><i class="university-dot"></i>Site universitaire CY</span></div>
-    <ol id="places"></ol>
-  </aside>
-  <div id="map" aria-label="Carte interactive des équipements sportifs"></div>
-</main>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2"/><path d="M7 22l3-6 3-2-1-6-4 2-1 4M12 8l3 4 4 1M13 14l2 3 1 5"/></symbol>
+    <symbol id="i-bus" viewBox="0 0 24 24"><path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol>
+    <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  </svg>
+
+  <main class="app">
+    <aside class="panel">
+      <header class="masthead">
+        <p>SUAPS · CY Cergy Paris Université</p>
+        <h1>Cours de sport <span class="season">2026-2027</span></h1>
+      </header>
+
+      <section class="view" id="browse" aria-label="Liste des cours">
+        <div class="tools">
+          <label class="search">
+            <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+            <span class="sr-only">Rechercher un cours</span>
+            <input id="q" type="search" placeholder="Un sport, un jour, un lieu…" autocomplete="off">
+          </label>
+          <div class="chips" id="dayChips" role="group" aria-label="Filtrer par jour"></div>
+          <div class="chips" id="catChips" role="group" aria-label="Filtrer par type de sport"></div>
+        </div>
+        <div class="scroll" id="listScroll">
+          <p class="sr-only" id="count" role="status"></p>
+          <div id="lists"></div>
+        </div>
+      </section>
+
+      <section class="view" id="detail" aria-label="Fiche du cours" hidden></section>
+    </aside>
+
+    <div id="map" role="application" aria-label="Carte des équipements sportifs">
+      <div class="legend"><span><i></i>Équipement</span><span><i class="c"></i>Site CY</span></div>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
 const places=[
  {n:1,name:'CY Cergy Paris Université — SUAPS (Service du sport universitaire) — Site des Chênes, entrée 3',address:'33 boulevard du Port, 95011 Cergy',lat:49.0389975,lng:2.0756928,noRoutes:true,hideAccessInfo:true,googleUrl:'https://www.google.com/maps/place/Centre+sportif+universitaire+des+Ch%C3%AAnes+-+CY+Cergy+Paris+Universit%C3%A9/@49.0389975,2.0756928,17z/data=!4m6!3m5!1s0x47e6f55556e1e7a1:0xb3bd218f384975df!8m2!3d49.0389975!4d2.0756928!16s%2Fg%2F11tdqy34g0'},
  {n:2,name:'Gymnase des Chênes',address:'Rue des Chênes-Pourpres, 95000 Cergy',lat:49.0398,lng:2.0737,bus:'À pied ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚲',footOnly:true,hideWalkModeInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3'},
  {n:3,name:'Piscine du Parvis',address:'Parvis de la Préfecture, 95000 Cergy',lat:49.0354,lng:2.0784,bus:'À pied, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚗 🚲',noTransit:true,combinedFootCar:true,hideModesInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3'},
  {n:4,name:'Complexe des Maradas',address:'6 passage du Lycée, 95300 Pontoise',lat:49.0352688,lng:2.0864838,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',combinedAll:true,hideModesInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3',googleUrl:'https://www.google.com/maps/place/Pôle+Sportif+des+Maradas+-+Joël+Motyl/@49.0352688,2.0864838,17z/data=!4m6!3m5!1s0x47e6f539ab1d80d1:0x48b27a349e7a325b!8m2!3d49.0352688!4d2.0864838!16s%2Fg%2F1tgp03jt'},
  {n:5,name:'Gymnase de l’ESSEC — Sports & Recreation Center',address:'3 avenue Bernard-Hirsch, 95000 Cergy — accès par la grille de la chapelle, côté parc François-Mitterrand',lat:49.0333333,lng:2.0752778,bus:'À pied, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚗 🚲',noTransit:true,combinedFootCar:true,hideModesInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3',googleUrl:'https://www.google.com/maps/search/?api=1&query=49.0333333,2.0752778'},
-{n:6,name:'Hall Omnisports Philippe HEMET',address:'1 Rue Pierre de Coubertin, 95300 Pontoise',lat:49.04532,lng:2.08511,bus:'À pied, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚗 🚲',noTransit:true,combinedFootCar:true,hideModesInRouteLabel:true,walkingOrigin:'49.039683,2.075183',walkingOriginLabel:'CY — site des Chênes',walkingDestination:'1 Rue Pierre de Coubertin, 95300 Pontoise',routeWaypoints:'49.039683,2.075183',drivingOrigin:'49.039683,2.075183',drivingOriginLabel:'CY — site des Chênes',drivingDestination:'Hall Omnisports Philippe HEMET, 1 Rue Pierre de Coubertin, 95300 Pontoise',googleUrl:'https://www.google.com/maps/search/?api=1&query=49.04532,2.08511'},
+ {n:6,name:'Hall Omnisports Philippe HEMET',address:'1 Rue Pierre de Coubertin, 95300 Pontoise',lat:49.04532,lng:2.08511,bus:'À pied, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚗 🚲',noTransit:true,combinedFootCar:true,hideModesInRouteLabel:true,walkingOrigin:'49.039683,2.075183',walkingOriginLabel:'CY — site des Chênes',walkingDestination:'1 Rue Pierre de Coubertin, 95300 Pontoise',routeWaypoints:'49.039683,2.075183',drivingOrigin:'49.039683,2.075183',drivingOriginLabel:'CY — site des Chênes',drivingDestination:'Hall Omnisports Philippe HEMET, 1 Rue Pierre de Coubertin, 95300 Pontoise',googleUrl:'https://www.google.com/maps/search/?api=1&query=49.04532,2.08511'},
  {n:7,name:'Block’Out',address:'9 chaussée Jules-César, 95520 Osny',lat:49.0627,lng:2.0604,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',combinedAll:true,hideModesInRouteLabel:true,walkingOrigin:'49.039683,2.075183',walkingOriginLabel:'CY – site des Chênes',walkingDestination:'Block’Out, 9 chaussée Jules-César, 95520 Osny',drivingOrigin:'49.039683,2.075183',drivingDestination:'Block’Out Cergy-Pontoise, 9 chaussée Jules-César, 95520 Osny'},
  {n:8,name:'Golf de Vauréal',address:'2 allée de l’Obstacle-d’Eau, 95490 Vauréal',lat:49.0380821,lng:2.0131195,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',combinedAll:true,hideModesInRouteLabel:true,googleUrl:'https://www.google.com/maps/place//data=!4m2!3m1!1s0x47e6f35b3ceeb64f:0x1cdbb8f23b6ce7fb?sa=X&ved=1t:8290&ictx=111'},
  {n:9,name:'Tennis Club de Pontoise',address:'18 chemin de la Pelouse, 95300 Pontoise',lat:49.03786,lng:2.09509,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',combinedAll:true,hideModesInRouteLabel:true,walkingOrigin:'49.0389975,2.0756928',walkingOriginLabel:'le SUAPS — Site des Chênes entrée 3',walkingDestination:'Tennis Club de Pontoise, 18 chemin de la Pelouse, 95300 Pontoise',transitDestination:'Tennis Club de Pontoise, 18 chemin de la Pelouse, 95300 Pontoise',drivingOrigin:'49.0389975,2.0756928',drivingDestination:'Tennis Club de Pontoise, 18 chemin de la Pelouse, 95300 Pontoise',googleUrl:'https://www.google.com/maps/search/?api=1&query=49.03786,2.09509'},
@@ -53,42 +193,336 @@ const places=[
  {n:12,name:'Île de loisirs — « Rafting » — Parking 1',address:'Stade d’eau vive, Île de loisirs, 95000 Cergy',lat:49.029111,lng:2.051169,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',customRaftRoutes:true,walkingOrigin:'49.039683,2.075183',walkingOriginLabel:'CY — site des Chênes',walkingDestination:'49.029111,2.051169',googleUrl:'https://www.google.com/maps/search/?api=1&query=49.029111,2.051169',carRoute:true,parking:'Parking 1, Île de loisirs de Cergy-Pontoise, Rue des Étangs, 95000 Cergy'},
  {n:13,name:'Île de loisirs — « Téléski–Vague à surf » — Parking Voie des Sabliers',address:'Île de loisirs de Cergy-Pontoise, 95000 Cergy',lat:49.0321701,lng:2.0455258,bus:'À pied, en bus, en voiture ou à vélo',accessLabel:'Accès',accessIcon:'🚶 🚌 🚗 🚲',customSurfRoutes:true,walkingOrigin:'49.039683,2.075183',walkingDestination:'49.0321701,2.0455258',hideMapLink:true},
  {n:'CY',name:'CY Cergy Paris Université — Site des Chênes',address:'33 boulevard du Port, 95011 Cergy-Pontoise',lat:49.039683,lng:2.075183,type:'university',bus:'Point de départ'},
- {n:'CY',name:'CY Cergy Paris Université — Site de Saint-Martin',address:'2 avenue Adolphe-Chauvin, 95300 Pontoise',lat:49.0428,lng:2.08424,type:'university',bus:'Arrêt Plateau Saint-Martin — lignes 1230, 1236'}
+ {n:'CY',name:'CY Cergy Paris Université — Site de Saint-Martin',address:'2 avenue Adolphe-Chauvin, 95300 Pontoise',lat:49.0428,lng:2.08424,type:'university',bus:'Arrêt Plateau Saint-Martin — lignes 1230, 1236'},
+ {n:'CY',name:'CY Cergy Paris Université — Site de Neuville-sur-Oise',address:'5 mail Gay-Lussac, 95000 Neuville-sur-Oise',lat:49.0168626,lng:2.0745323,type:'university',hideAccessInfo:true},
+ {n:14,name:'Climb Up Épinay',address:'8 rue Henri Wallon, 93800 Épinay-sur-Seine',lat:48.953824,lng:2.3219625,noRoutes:true,hideAccessInfo:true,far:true}
 ];
-const map=L.map('map',{zoomControl:true}).setView([49.041,2.075],13);
+// Affichage : titre court, sous-titre et catégorie, par position dans places
+const display=[
+ {title:'SUAPS — Site des Chênes',sub:'Service du sport universitaire, entrée 3',cat:'accueil'},
+ {title:'Gymnase des Chênes',cat:'salle'},
+ {title:'Piscine du Parvis',cat:'eau'},
+ {title:'Complexe des Maradas',cat:'salle'},
+ {title:'Gymnase de l’ESSEC',sub:'Sports & Recreation Center',cat:'salle'},
+ {title:'Hall Omnisports Philippe Hemet',cat:'salle'},
+ {title:'Block’Out',cat:'salle'},
+ {title:'Golf de Vauréal',cat:'air'},
+ {title:'Tennis Club de Pontoise',cat:'air'},
+ {title:'Kayak-Paddle',sub:'Île de loisirs · Parking 3 · Centre multisports',cat:'eau'},
+ {title:'Accrobranche',sub:'Île de loisirs · Parking 1',cat:'air'},
+ {title:'Rafting',sub:'Île de loisirs · Parking 1',cat:'eau'},
+ {title:'Téléski – Vague à surf',sub:'Île de loisirs · Parking Voie des Sabliers',cat:'eau'},
+ {title:'Site des Chênes',sub:'CY Cergy Paris Université'},
+ {title:'Site de Saint-Martin',sub:'CY Cergy Paris Université'},
+ {title:'Site de Neuville-sur-Oise',sub:'CY Cergy Paris Université'},
+ {title:'Climb Up Épinay'}
+];
+const days={lun:'Lundi',mar:'Mardi',mer:'Mercredi',jeu:'Jeudi',ven:'Vendredi',sam:'Samedi'};
+const cats={collectif:'Collectifs',raquette:'Raquette',eau:'Aquatiques',combat:'Combat',bienetre:'Bien-être',gym:'Gymniques',art:'Artistiques',forme:'Forme',nature:'Pleine nature'};
+// Lieux du planning, par position dans places
+const CSU=0,CHENES=1,PISCINE=2,MARADAS=3,ESSEC=4,HEMET=5,BLOCKOUT=6,GOLF=7,TENNIS=8,CLIMBUP=16;
+const B={bonus:true};
+// Planning SUAPS 2026-2027 : [jour, début, fin, cours, lieu, salle, catégorie, options]
+const planning=[
+ ['lun','10h','12h','Kickboxing',CSU,'Dojo','combat',B],
+ ['lun','10h','12h','Musculation',CSU,'Musculation','forme'],
+ ['lun','10h','12h','Football',MARADAS,'Stade','collectif',B],
+ ['lun','12h','19h','Musculation',CSU,'Musculation','forme',{sub:'En accès libre'}],
+ ['lun','12h15','13h45','Volley-ball',CHENES,'','collectif'],
+ ['lun','12h30','13h30','Self-défense',CSU,'Dojo','combat'],
+ ['lun','13h','15h','Tennis de table',CSU,'Salle de danse','raquette',B],
+ ['lun','13h45','15h45','Volley-ball',CHENES,'','collectif',B],
+ ['lun','14h','16h','Grappling',CSU,'Dojo','combat',B],
+ ['lun','15h30','17h30','Pilates',CSU,'Salle de danse','bienetre',B],
+ ['lun','15h30','17h30','Badminton',MARADAS,'Gymnase','raquette',B],
+ ['lun','15h45','17h45','Futsal',CHENES,'','collectif'],
+ ['lun','16h','18h','MMA',CSU,'Dojo','combat'],
+ ['lun','17h30','18h30','Pilates',CSU,'Salle de danse','bienetre'],
+ ['lun','18h','20h','Handball',HEMET,'','collectif'],
+ ['lun','18h15','19h15','Cardio training',CSU,'Dojo','forme'],
+ ['lun','18h30','19h30','Salsa',CSU,'Salle de danse','art',{sub:'Niveau débutant'}],
+ ['lun','19h30','20h30','Salsa',CSU,'Salle de danse','art',{sub:'Niveau intermédiaire'}],
+ ['lun','20h30','21h30','Bachata',CSU,'Salle de danse','art'],
+ ['mar','10h','12h','Musculation',CSU,'Musculation','forme'],
+ ['mar','10h','12h','Futsal',CHENES,'','collectif',B],
+ ['mar','12h','13h30','Futsal',CHENES,'','collectif'],
+ ['mar','12h','19h','Musculation',CSU,'Musculation','forme',{sub:'En accès libre'}],
+ ['mar','12h30','13h30','Cardio training',CSU,'Salle de danse','forme'],
+ ['mar','12h45','13h45','Natation',PISCINE,'','eau'],
+ ['mar','13h30','15h','Sports collectifs',CHENES,'','collectif'],
+ ['mar','14h','16h','Auto-défense',CSU,'Dojo','combat',{bonus:true,sub:'« Confiance en soi »'}],
+ ['mar','14h','16h','Football',MARADAS,'','collectif'],
+ ['mar','14h','16h','Handball',ESSEC,'','collectif',B],
+ ['mar','16h','18h','MMA',CSU,'Dojo','combat',B],
+ ['mar','16h','18h','Football',MARADAS,'','collectif'],
+ ['mar','16h30','18h30','Escalade',BLOCKOUT,'','nature'],
+ ['mar','18h','19h30','Kizomba',CSU,'Salle de danse','art'],
+ ['mar','18h','20h','Jujitsu combat-contact',CSU,'Dojo','combat',B],
+ ['mar','18h','20h','Football féminin',MARADAS,'','collectif',B],
+ ['mer','10h','12h','Musculation',CSU,'Musculation','forme',B],
+ ['mer','12h','14h','Futsal',CHENES,'','collectif'],
+ ['mer','12h','19h','Musculation',CSU,'Musculation','forme',{sub:'En accès libre'}],
+ ['mer','14h30','16h30','Football',MARADAS,'Extérieur','collectif'],
+ ['mer','16h30','18h30','Football',MARADAS,'Extérieur','collectif'],
+ ['mer','16h30','18h30','Basket-ball',MARADAS,'Gymnase','collectif'],
+ ['mer','17h','18h','Yoga',CSU,'Dojo','bienetre'],
+ ['mer','17h','19h','Escalade',CLIMBUP,'','nature'],
+ ['mer','18h30','20h','Basket-ball',MARADAS,'Gymnase','collectif',{sub:'Entraînement compétition'}],
+ ['mer','18h30','20h30','Hip-hop',CSU,'Salle de danse','art',B],
+ ['mer','20h30','21h30','Danse contemporaine',CSU,'Salle de danse','art'],
+ ['jeu','10h','12h','Musculation',CSU,'Musculation','forme'],
+ ['jeu','12h','19h','Musculation',CSU,'Musculation','forme',{sub:'En accès libre'}],
+ ['jeu','12h30','13h30','Cardio training',CSU,'Salle de danse','forme'],
+ ['jeu','12h30','13h30','Pilates',CSU,'Dojo','bienetre'],
+ ['jeu','12h45','13h45','Escalade',ESSEC,'','nature'],
+ ['jeu','13h30','15h30','VTT',MARADAS,'Hall','nature',B],
+ ['jeu','13h30','15h30','Tennis',TENNIS,'','raquette',B],
+ ['jeu','14h','16h','Escrime',CSU,'Salle de danse','combat',B],
+ ['jeu','14h','16h','MMA',CSU,'Dojo','combat',{sub:'Entraînement compétition',note:'Voir calendrier.'}],
+ ['jeu','14h','16h','Escalade',ESSEC,'','nature',B],
+ ['jeu','15h30','17h30','Tennis',TENNIS,'','raquette'],
+ ['jeu','15h45','17h45','Trail',MARADAS,'Hall','nature',B],
+ ['jeu','16h','17h','Escrime',CSU,'Salle de danse','combat',{sub:'Entraînement compétition'}],
+ ['jeu','16h','18h','Escalade bloc',BLOCKOUT,'','nature',B],
+ ['jeu','16h15','18h15','Badminton',MARADAS,'Gymnase','raquette'],
+ ['jeu','17h','18h','Natation',PISCINE,'','eau'],
+ ['jeu','17h','19h','Cheerleading',CSU,'Salle de danse','gym'],
+ ['jeu','18h','20h','Rugby',MARADAS,'Extérieur','collectif',B],
+ ['ven','10h','12h','Judo',CSU,'Dojo','combat',B],
+ ['ven','10h','12h','Musculation',CSU,'Musculation','forme'],
+ ['ven','11h30','13h30','Parkour',MARADAS,'Gymnastique','gym',B],
+ ['ven','12h','19h','Musculation',CSU,'Musculation','forme',{sub:'En accès libre'}],
+ ['ven','12h30','13h30','Pump training',CSU,'Salle de danse','forme'],
+ ['ven','12h30','13h30','Yoga',CSU,'Dojo','bienetre'],
+ ['ven','12h45','13h45','Natation',PISCINE,'','eau'],
+ ['ven','13h45','15h45','Natation sportive',PISCINE,'','eau'],
+ ['ven','13h45','15h45','Formation SSA',PISCINE,'','eau'],
+ ['ven','14h','16h','Basket-ball',MARADAS,'Gymnase','collectif',B],
+ ['ven','15h45','16h45','Natation',PISCINE,'','eau',{sub:'« Apprendre à nager »'}],
+ ['ven','16h30','18h30','Volley-ball',ESSEC,'','collectif',{sub:'Entraînement compétition'}],
+ ['ven','17h','19h','MMA',CSU,'Dojo','combat'],
+ ['ven','17h30','18h30','Zumba',CSU,'Salle de danse','forme'],
+ ['sam','11h','13h','Golf',GOLF,'','nature']
+];
+const modeNames={'🚶':['walk','à pied'],'🚌':['bus','en bus'],'🚗':['car','en voiture'],'🚲':['bike','à vélo']};
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const map=L.map('map',{zoomControl:false}).setView([49.041,2.075],13);
+L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
-const list=document.getElementById('places'),markers=[];
+
 function mapsLink(p){return p.googleUrl||'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.name+', '+p.address)}
 function transitLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent('CY Cergy Paris Université Site des Chênes, 33 boulevard du Port, Cergy')+'&destination='+encodeURIComponent(p.transitDestination||p.name+', '+p.address)+(p.placeId?'&destination_place_id='+encodeURIComponent(p.placeId):'')+'&travelmode=transit'}
 function drivingLink(p){const placeId=p.parkingPlaceId||p.placeId;return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.drivingOrigin||'49.039683,2.075183')+'&destination='+encodeURIComponent(p.drivingDestination||p.parkingCoords||p.parking||p.lat+','+p.lng)+(placeId?'&destination_place_id='+encodeURIComponent(placeId):'')+(p.drivingWaypoints?'&waypoints='+encodeURIComponent(p.drivingWaypoints):'')+'&travelmode=driving'}
 function walkingLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.walkingOrigin||'49.039683,2.075183')+'&destination='+encodeURIComponent(p.walkingDestination||p.lat+','+p.lng)+(p.placeId?'&destination_place_id='+encodeURIComponent(p.placeId):'')+'&travelmode=walking'}
 function mixedFootCarLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.walkingOrigin||'49.039683,2.075183')+'&destination='+encodeURIComponent(p.walkingDestination||p.lat+','+p.lng)+(p.placeId?'&destination_place_id='+encodeURIComponent(p.placeId):'')+(p.routeWaypoints?'&waypoints='+encodeURIComponent(p.routeWaypoints):'')}
 function walkingFromParkingLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.parkingCoords||p.parking)+(p.parkingPlaceId?'&origin_place_id='+encodeURIComponent(p.parkingPlaceId):'')+'&destination='+encodeURIComponent(p.lat+','+p.lng)+'&travelmode=walking'}
-function walkingFromTransitLink(p){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(p.transitDestination)+'&destination='+encodeURIComponent(p.lat+','+p.lng)+'&travelmode=walking'}
-places.forEach((p,i)=>{
- const icon=L.divIcon({className:'',html:'<div class="numbered-marker '+(p.type==='university'?'university':'')+'"><span>'+p.n+'</span></div>',iconSize:[32,32],iconAnchor:[16,32],popupAnchor:[0,-30]});
- const carLabel=p.parking?'🚗 Itinéraire en voiture de CY jusqu’au '+p.parking.split(',')[0]:'🚗 Itinéraire en voiture depuis '+(p.drivingOriginLabel||'CY – site des Chênes');
- const standardRoutes='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">🚶 Itinéraire à pied depuis '+(p.walkingOriginLabel||'CY – site des Chênes')+'</a>'+(p.noTransit?'':'<br><a target="_blank" rel="noopener" href="'+transitLink(p)+'">🚌 Itinéraire en bus depuis le site des Chênes</a>')+'<br><a target="_blank" rel="noopener" href="'+drivingLink(p)+'">'+carLabel+'</a>';
- const combinedFootCarRoute='<br><a target="_blank" rel="noopener" href="'+mixedFootCarLink(p)+'">🚶 🚗 Itinéraire '+(p.hideModesInRouteLabel?'':'à pied ou en voiture ')+'depuis '+(p.walkingOriginLabel||'CY – site des Chênes')+'</a>';
- const combinedAllRoute='<br><a target="_blank" rel="noopener" href="'+mixedFootCarLink(p)+'">🚶 🚌 🚗 Itinéraire '+(p.hideModesInRouteLabel?'':'à pied, en bus ou en voiture ')+'depuis '+(p.walkingOriginLabel||'CY – site des Chênes')+(p.routeNote?' — '+p.routeNote:'')+'</a>';
- const footOnlyLabel=p.walkingOnlyToParking?'🚶 Itinéraire depuis '+(p.walkingOriginLabel||'CY – site des Chênes')+' jusqu’au Parking 3':'🚶 Itinéraire '+(p.hideWalkModeInRouteLabel?'':'à pied ')+'depuis '+(p.walkingOriginLabel||'CY – site des Chênes');
- const footOnlyRoute='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">'+footOnlyLabel+'</a>';
- const kayakRoutes=footOnlyRoute+'<br><a target="_blank" rel="noopener" href="'+drivingLink(p)+'">🚗 Itinéraire en voiture depuis CY — site des Chênes jusqu’au Parking 3, en passant par l’entrée de l’Île de loisirs</a>';
- const accroRoutes='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">🚶 Itinéraire depuis CY — site des Chênes jusqu’à l’Accrobranche</a>';
- const raftRoutes='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">🚶 Itinéraire depuis CY — site des Chênes jusqu’au Rafting</a>';
- const surfRoutes='<br><a target="_blank" rel="noopener" href="'+walkingLink(p)+'">🚶 Itinéraire depuis CY — site des Chênes jusqu’à la Vague à surf</a>';
- const islandTransitRoutes=p.transitEndsAtParking?'<br><a target="_blank" rel="noopener" href="'+transitLink(p)+'">🚌 🚶 Itinéraire en bus, puis à pied, depuis le site des Chênes jusqu’au Parking 3</a>':'<br><a target="_blank" rel="noopener" href="'+transitLink(p)+'">🚌 Itinéraire en bus depuis le site des Chênes</a>';
- const parkingWalkRoute=p.hideParkingWalk?'':'<br><a target="_blank" rel="noopener" href="'+walkingFromParkingLink(p)+'">🚶 Accès uniquement à pied du parking jusqu’à l’activité — aucun accès voiture</a>';
- const islandRoutes=islandTransitRoutes+'<br><a target="_blank" rel="noopener" href="'+drivingLink(p)+'">'+carLabel+'</a>'+parkingWalkRoute;
- const routeLinks=(p.type==='university'||p.noRoutes)?'':(p.customKayakRoutes?kayakRoutes:(p.customSurfRoutes?surfRoutes:(p.customRaftRoutes?raftRoutes:(p.customAccroRoutes?accroRoutes:(p.walkingOnlyToParking?footOnlyRoute:(p.parking?islandRoutes:(p.combinedAll?combinedAllRoute:(p.combinedFootCar?combinedFootCarRoute:(p.footOnly?footOnlyRoute:standardRoutes)))))))));
- const accessInfo=p.hideAccessInfo?'':'<br><b>'+(p.accessLabel||'Bus')+' :</b> '+p.bus;
- const mapLink=p.hideMapLink?'':'<br><a target="_blank" rel="noopener" href="'+mapsLink(p)+'">Voir le lieu</a>';
- const marker=L.marker([p.lat,p.lng],{icon}).addTo(map).bindPopup('<strong>'+p.n+'. '+p.name+'</strong><br>'+p.address+accessInfo+routeLinks+mapLink);
- markers.push(marker);
- const li=document.createElement('li'),button=document.createElement('button');button.className='place '+(p.type==='university'?'university':'');button.type='button';button.innerHTML='<span class="num">'+p.n+'</span><span class="name">'+p.name+'</span><span class="address">'+p.address+'</span>'+(p.hideAccessInfo?'':'<span class="bus">'+(p.accessIcon||'🚌')+' '+p.bus+'</span>');
- button.addEventListener('click',()=>{document.querySelectorAll('.place').forEach(x=>x.classList.remove('active'));button.classList.add('active');map.flyTo([p.lat,p.lng],16,{duration:.7});marker.openPopup()});li.appendChild(button);list.appendChild(li);
+
+// Itinéraires d'un lieu : [modes, libellé, lien]
+function routesFor(p){
+ const from=p.walkingOriginLabel||'CY – site des Chênes';
+ const carLabel=p.parking?'Itinéraire en voiture de CY jusqu’au '+p.parking.split(',')[0]:'Itinéraire en voiture depuis '+(p.drivingOriginLabel||'CY – site des Chênes');
+ const bus=[['bus'],'Itinéraire en bus depuis le site des Chênes',transitLink(p)];
+ const car=[['car'],carLabel,drivingLink(p)];
+ const foot=[['walk'],p.walkingOnlyToParking?'Itinéraire depuis '+from+' jusqu’au Parking 3':'Itinéraire '+(p.hideWalkModeInRouteLabel?'':'à pied ')+'depuis '+from,walkingLink(p)];
+ if(p.type==='university'||p.noRoutes)return [];
+ if(p.customKayakRoutes)return [foot,[['car'],'Itinéraire en voiture depuis CY — site des Chênes jusqu’au Parking 3, en passant par l’entrée de l’Île de loisirs',drivingLink(p)]];
+ if(p.customSurfRoutes)return [[['walk'],'Itinéraire depuis CY — site des Chênes jusqu’à la Vague à surf',walkingLink(p)]];
+ if(p.customRaftRoutes)return [[['walk'],'Itinéraire depuis CY — site des Chênes jusqu’au Rafting',walkingLink(p)]];
+ if(p.customAccroRoutes)return [[['walk'],'Itinéraire depuis CY — site des Chênes jusqu’à l’Accrobranche',walkingLink(p)]];
+ if(p.walkingOnlyToParking)return [foot];
+ if(p.parking)return [bus,car,...(p.hideParkingWalk?[]:[[['walk'],'Accès uniquement à pied du parking jusqu’à l’activité — aucun accès voiture',walkingFromParkingLink(p)]])];
+ if(p.combinedAll)return [[['walk','bus','car'],'Itinéraire '+(p.hideModesInRouteLabel?'':'à pied, en bus ou en voiture ')+'depuis '+from+(p.routeNote?' — '+p.routeNote:''),mixedFootCarLink(p)]];
+ if(p.combinedFootCar)return [[['walk','car'],'Itinéraire '+(p.hideModesInRouteLabel?'':'à pied ou en voiture ')+'depuis '+from,mixedFootCarLink(p)]];
+ if(p.footOnly)return [foot];
+ return [[['walk'],'Itinéraire à pied depuis '+from,walkingLink(p)],...(p.noTransit?[]:[bus]),car];
+}
+
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+function icon(id){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('class','icon');s.setAttribute('aria-hidden','true');const u=document.createElementNS('http://www.w3.org/2000/svg','use');u.setAttribute('href','#i-'+id);s.appendChild(u);return s}
+function modeIcons(ids){const w=el('span','modes');ids.forEach(id=>w.appendChild(icon(id)));return w}
+function city(p){const m=p.address.match(/\d{5}\s+([^—]+)/);return m?m[1].trim():''}
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+
+const items=places.map((p,i)=>{
+ const d=display[i],campus=p.type==='university';
+ const modes=(p.accessIcon||'').split(' ').filter(Boolean).map(e=>modeNames[e]);
+ const item={p,...d,id:i+1,campus,modes,hay:norm([d.title,d.sub,p.name,p.address].join(' '))};
+ const pinIcon=on=>L.divIcon({className:'',html:'<div class="pin'+(campus?' campus':'')+(on?' on':'')+'"><span>'+p.n+'</span></div>',iconSize:[34,34],iconAnchor:[17,34]});
+ item.setPin=on=>{item.marker.setIcon(pinIcon(on));item.marker.setZIndexOffset(on?1000:0)};
+ item.marker=L.marker([p.lat,p.lng],{icon:pinIcon(false),title:d.title,alt:d.title}).addTo(map);
+ item.marker.bindTooltip(d.title,{direction:'top',offset:[0,-34],className:'pin-tip'});
+ item.marker.on('click',()=>open(item));
+ const row=el('button','place'+(campus?' campus':''));row.type='button';
+ row.appendChild(el('span','num',p.n));
+ const text=el('span','place-text');text.appendChild(el('span','place-title',d.title));
+ text.appendChild(el('span','place-sub',[d.sub,city(p)].filter(Boolean).join(' · ')));
+ row.appendChild(text);row.appendChild(modeIcons(modes.map(m=>m[0])));
+ row.addEventListener('click',()=>open(item,row));
+ item.row=row;return item;
 });
-map.fitBounds(L.latLngBounds(places.map(p=>[p.lat,p.lng])),{padding:[40,40]});
-</script>
+
+const sessions=planning.map(([day,start,end,sport,place,room,cat,opt],i)=>{
+ const item=items[place],o=opt||{},where=[item.title,room].filter(Boolean).join(' · ');
+ const s={id:i+1,day,time:start+'–'+end,sport,room,cat,item,where,sub:o.sub||'',note:o.note||'',bonus:!!o.bonus};
+ s.hay=norm([sport,s.sub,days[day],cats[cat],where,item.p.address,o.bonus?'point bonus':''].join(' '));
+ return s;
+});
+items.forEach(it=>{it.sessions=sessions.filter(s=>s.item===it)});
+
+const lists=document.getElementById('lists'),browse=document.getElementById('browse'),detail=document.getElementById('detail'),q=document.getElementById('q'),count=document.getElementById('count'),listScroll=document.getElementById('listScroll');
+const dayChips=document.getElementById('dayChips'),catChips=document.getElementById('catChips');
+let dayFilter='all',catFilter='all',bonusOnly=false,current=null,lastRow=null,started=false;
+
+function chip(box,label,pressed,onClick){
+ const c=el('button','chip',label);c.type='button';c.setAttribute('aria-pressed',pressed);
+ c.addEventListener('click',()=>{onClick(c);render(true)});box.appendChild(c);return c;
+}
+function pick(box,c){box.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===c))}
+const allDays=chip(dayChips,'Tous les jours',true,c=>{dayFilter='all';pick(dayChips,c)});
+Object.keys(days).forEach(d=>chip(dayChips,days[d].slice(0,3),false,c=>{dayFilter=d;pick(dayChips,c)}));
+const allCats=chip(catChips,'Tous les sports',true,c=>{catFilter='all';pick(catChips,c)});
+Object.keys(cats).forEach(k=>chip(catChips,cats[k],false,c=>{catFilter=k;pick(catChips,c)}));
+const bonusChip=chip(catChips,'Point bonus',false,c=>{bonusOnly=!bonusOnly;c.setAttribute('aria-pressed',bonusOnly)});
+function resetFilters(){
+ q.value='';dayFilter='all';catFilter='all';bonusOnly=false;
+ pick(dayChips,allDays);pick(catChips,allCats);bonusChip.setAttribute('aria-pressed',false);
+}
+
+function matches(hay){const t=norm(q.value.trim());return !t||t.split(/\s+/).every(w=>hay.includes(w))}
+function filtering(){return dayFilter!=='all'||catFilter!=='all'||bonusOnly}
+function visibleSessions(){
+ return sessions.filter(s=>(dayFilter==='all'||s.day===dayFilter)&&(catFilter==='all'||s.cat===catFilter)&&(!bonusOnly||s.bonus)&&matches(s.hay));
+}
+function otherPlaces(){return filtering()?[]:items.filter(it=>!it.sessions.length&&matches(it.hay))}
+function visible(){return [...new Set(visibleSessions().map(s=>s.item))].concat(otherPlaces())}
+function sessionRow(s,inPlace){
+ const row=el('button','place'+(s.item.campus?' campus':''));row.type='button';
+ if(!inPlace)row.appendChild(el('span','num',s.item.p.n));
+ const text=el('span','place-text');
+ text.appendChild(el('span','place-title',s.sport));
+ if(s.sub)text.appendChild(el('span','place-sub',s.sub));
+ text.appendChild(el('span','place-sub',days[s.day]+' · '+s.time));
+ if(!inPlace)text.appendChild(el('span','place-sub',s.where));
+ row.appendChild(text);
+ row.appendChild(s.bonus?el('span','bonus','Bonus'):el('span'));
+ row.addEventListener('click',()=>open(s.item,row,s));
+ return row;
+}
+function fit(all,animate){
+ const near=all.filter(it=>!it.p.far),list=near.length?near:all;
+ const pts=list.map(it=>[it.p.lat,it.p.lng]);
+ if(!pts.length)return;
+ if(pts.length===1)map.setView(pts[0],15,{animate:animate&&!calm});
+ else map.fitBounds(pts,{padding:[46,46],maxZoom:15,animate:animate&&!calm});
+}
+function render(refit){
+ const vis=visible();
+ items.forEach(it=>{const on=vis.includes(it);if(on&&!map.hasLayer(it.marker))it.marker.addTo(map);if(!on&&map.hasLayer(it.marker))it.marker.remove()});
+ lists.textContent='';
+ const add=(title,arr)=>{
+  if(!arr.length)return;
+  lists.appendChild(el('h2','group',title));
+  const ol=el('ol','places');arr.forEach(it=>{const li=el('li');li.appendChild(it.row);ol.appendChild(li)});lists.appendChild(ol);
+ };
+ const shown=visibleSessions();
+ Object.keys(days).forEach(d=>{
+  const rows=shown.filter(s=>s.day===d);
+  if(!rows.length)return;
+  lists.appendChild(el('h2','group',days[d]));
+  const ol=el('ol','places');rows.forEach(s=>{const li=el('li');li.appendChild(sessionRow(s));ol.appendChild(li)});lists.appendChild(ol);
+ });
+ add('Autres lieux',otherPlaces());
+ count.textContent=shown.length+(shown.length>1?' cours affichés':' cours affiché');
+ if(!vis.length){
+  const p=el('p','empty','Aucun cours ne correspond. ');const b=el('button',null,'Tout afficher');b.type='button';
+  b.addEventListener('click',()=>{resetFilters();render(true);q.focus()});
+  p.appendChild(b);lists.appendChild(p);
+ }
+ if(refit)fit(vis,true);
+}
+
+function open(item,row,session){
+ if(current)current.setPin(false);
+ if(!map.hasLayer(item.marker)){resetFilters();render(false)}
+ current=item;lastRow=row||item.row;
+ item.setPin(true);item.marker.closeTooltip();
+ const p=item.p;
+ detail.textContent='';
+ const back=el('button','back');back.type='button';back.appendChild(icon('back'));back.appendChild(el('span',null,'Tous les lieux'));
+ back.lastChild.textContent='Tous les cours';
+ back.addEventListener('click',close);detail.appendChild(back);
+ const scroll=el('div','scroll'),body=el('div','detail-body');
+ const head=el('div','detail-head'+(item.campus?' campus':''));
+ head.appendChild(el('span','num',p.n));
+ const tw=el('div');
+ const kicker=session?cats[session.cat]+(session.sub?' · '+session.sub:''):item.sub;
+ if(kicker)tw.appendChild(el('p','kicker',kicker));
+ const h=el('h2',null,session?session.sport:item.title);h.tabIndex=-1;tw.appendChild(h);
+ head.appendChild(tw);body.appendChild(head);
+ const dl=el('dl','facts');
+ const fact=(k,v)=>{const d=el('div');d.appendChild(el('dt',null,k));const dd=el('dd');
+  if(typeof v==='string')dd.textContent=v;else dd.appendChild(v);d.appendChild(dd);dl.appendChild(d)};
+ if(session){
+  fact('Quand',days[session.day]+', '+session.time.replace('–',' à '));
+  fact('Où',session.where);
+  fact('Évaluation',session.bonus?'Sport pour tous et point bonus : apprentissage évalué (L2 semestre 3 et L3 semestre 5)':'Sport pour tous : apprentissage non évalué');
+  if(session.note)fact('À noter',session.note);
+ }
+ fact('Adresse',p.address);
+ if(!p.hideAccessInfo){
+  const w=el('span');w.style.cssText='display:flex;flex-wrap:wrap;align-items:center;gap:8px';
+  if(item.modes.length)w.appendChild(modeIcons(item.modes.map(m=>m[0])));
+  w.appendChild(el('span',null,p.bus));
+  fact(p.accessLabel||'Bus',w);
+ }
+ body.appendChild(dl);
+ const routes=routesFor(p),links=el('div','routes');
+ const link=(ids,label,href,plain)=>{
+  const a=el('a','route'+(plain?' plain':''));a.href=href;a.target='_blank';a.rel='noopener';
+  a.appendChild(modeIcons(ids));a.appendChild(el('span',null,label));
+  const o=el('span','out');o.appendChild(icon('out'));o.appendChild(el('span','sr-only',' (s’ouvre dans Google Maps)'));a.appendChild(o);links.appendChild(a);
+ };
+ routes.forEach(r=>link(r[0],r[1],r[2]));
+ if(!p.hideMapLink)link(['pin'],'Voir le lieu',mapsLink(p),true);
+ if(links.children.length){body.appendChild(el('h3',null,routes.length?'Y aller':'Sur la carte'));body.appendChild(links)}
+ const here=item.sessions.filter(s=>s!==session);
+ if(here.length){
+  body.appendChild(el('h3',null,session?'Autres cours ici':'Cours ici'));
+  const box=el('div','others');here.forEach(s=>box.appendChild(sessionRow(s,true)));body.appendChild(box);
+ }
+ scroll.appendChild(body);detail.appendChild(scroll);
+ browse.hidden=true;detail.hidden=false;
+ if(calm)map.setView([p.lat,p.lng],15);else map.flyTo([p.lat,p.lng],15,{duration:.7});
+ history.replaceState(null,'',session?'#cours-'+session.id:'#lieu-'+item.id);
+ if(row||document.activeElement===document.body)h.focus({preventScroll:true});
+}
+function close(){
+ if(!current)return;
+ current.setPin(false);current=null;
+ detail.hidden=true;browse.hidden=false;
+ history.replaceState(null,'',location.pathname+location.search);
+ fit(visible(),true);
+ if(lastRow&&lastRow.isConnected)lastRow.focus({preventScroll:true});
+}
+
+q.addEventListener('input',()=>render(true));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+map.on('click',close);
+// Évite une vue mal cadrée si la carte n'a pas encore sa taille au chargement
+new ResizeObserver(()=>{
+ const m=document.getElementById('map');if(!m.offsetWidth||!m.offsetHeight)return;
+ map.invalidateSize();
+ if(!current)fit(visible(),false);
+ else map.setView([current.p.lat,current.p.lng],15,{animate:false});
+ if(!started){
+  started=true;
+  const h=location.hash.match(/^#(lieu|cours)-(\d+)$/);
+  if(h&&h[1]==='lieu'&&items[h[2]-1])open(items[h[2]-1]);
+  if(h&&h[1]==='cours'&&sessions[h[2]-1])open(sessions[h[2]-1].item,null,sessions[h[2]-1]);
+ }
+}).observe(document.getElementById('map'));
+render(false);
+  </script>
 </body>
 </html>
